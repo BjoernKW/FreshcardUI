@@ -1,0 +1,143 @@
+<h2 class="inline">{{ 'PROFILE' | translate }}</h2><span ng-if="user && authToken"><small> ( <a ng-href="#/account">{{ 'ACCOUNT' | translate }}</a> )</small></span>
+<br><br>
+<div class="profile">
+	<div class="row">
+		<div class="col-sm-3">
+			<strong>{{ 'PROFILE_PICTURE' | translate }}</strong><br>
+			{{ 'PROFILE_PICTURE_HELP' | translate }}
+		</div>
+		<div class="col-sm-3" ng-if="user.profilePicturePath !== null && (profileVCards[0][9].value === undefined || profileVCards[0][9].value === null)">
+			<img width="150" alt="{{ user.name }}" ng-src="{{ user.profilePicturePath }}" /><br><br>
+		</div>
+		<div class="col-sm-3" ng-if="profileVCards[0][9].value !== undefined && profileVCards[0][9].value !== null">
+			<img width="150" alt="{{ profileVCards[0][0].value }}" ng-src="{{ profileVCards[0][9].value }}" /><br><br>
+		</div>
+		<div class="col-sm-3">
+			<div ng-show="imageUploader.isHTML5">
+	            <div nv-file-drop="" uploader="imageUploader">
+	                <div nv-file-over="" uploader="imageUploader" over-class="drop-zone-over" class="well drop-zone drop-zone-profile-picture">
+	                    {{ 'DROP_PROFILE_PICTURE_HERE' | translate }}<br><br>
+	                    {{ 'PROFILE_PICTURE_MAX_DIMENSIONS' | translate }}<br><br>
+	                    <span ng-show="imageUploading" class="text-primary glyphicon glyphicon-transfer"></span>
+	                    <span ng-show="imageUploadCompleted" class="text-success glyphicon glyphicon-ok"></span>
+	                    <span ng-show="imageUploadFailed" class="text-danger glyphicon glyphicon-remove"></span>
+	                </div>
+	            </div>
+	        </div>
+	        <div class="form-group" ng-hide="imageUploader.isHTML5">
+	            <input nv-file-select="" uploader="imageUploader" type="file" class="form-control">
+	        </div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-offset-3 col-sm-6">
+			<a href="{{ configuration.apiRootURL }}api/v1/users/getVCardsByHashCode/{{ hashCode }}" ng-show="profileVCards.length > 0">{{ 'VCARD' | translate }}</a><span ng-if="user && authToken && user.confirmed"> | <a ng-href="#/public/profile/{{ user.hashCode }}" target="_blank">{{ 'PUBLIC_PROFILE' | translate }}</a></span>
+		</div>
+	</div>
+	<br>
+	<form class="form" name="profileForm" ng-if="user && authToken">
+		<div class="row">
+			<div class="form-group">
+				<div class="col-sm-3">
+					<strong>{{ 'EMAIL_SIGNATURE' | translate }}</strong><br>
+					{{ 'BIO_HELP' | translate }}
+				</div>
+				<div class="col-sm-6">
+					<textarea  class="form-control" rows="5" ng-model="user.customSignature"></textarea>
+					<br><input type="submit" value="{{ 'SUBMIT' | translate }}" class="btn" ng-class="{ 'btn-success': !customSignatureUpdateFailed, 'btn-danger': customSignatureUpdateFailed }" ng-click="updateCustomSignature()">
+					<span class="text-danger" ng-show="customSignatureUpdateFailed">{{ 'CUSTOM_SIGNATURE_UPDATE_FAILED' | translate }}</span>
+					<span class="text-success" ng-show="customSignatureUpdated">{{ 'CUSTOM_SIGNATURE_UPDATED' | translate }}</span>
+				</div>
+			</div>
+		</div>
+	</form>
+	<hr>
+	<ng-include src="'views/vCards.html'"></ng-include>
+	<hr>
+</div>
+
+<div ng-if="user && authToken">
+	<div ng-if="$root.user.roles.ROLE_SUPER_ADMIN">
+		<div class="row">
+		    <div class="col-sm-12"><h3>{{ 'UPLOAD_VCARD_FILE' | translate }}</h3></div>
+		    <div class="col-sm-6">
+		        <div ng-show="uploader.isHTML5">
+		            <div nv-file-drop="" uploader="uploader">
+		                <div nv-file-over="" uploader="uploader" over-class="drop-zone-over" class="well drop-zone">
+		                    {{ 'DROP_VCARD_HERE' | translate }}
+		                </div>
+		            </div>
+		        </div>
+		        <div class="form-group" ng-hide="uploader.isHTML5">
+		            <input nv-file-select="" uploader="uploader" type="file" class="form-control">
+		        </div>
+		    </div>
+		</div>
+		<div class="row" ng-show="uploader.queue.length > 0">
+		    <div class="col-sm-6">
+		        <table class="table table-striped table-bordered table-hover" ng-show="uploader.queue.length > 0">
+		            <thead>
+		                <tr>
+		                    <th>{{ 'NAME' | translate }}</th>
+		                    <th ng-show="uploader.isHTML5">{{ 'SIZE' | translate }}</th>
+		                    <th ng-show="uploader.isHTML5">{{ 'PROGRESS' | translate }}</th>
+		                    <th>&nbsp;</th>
+		                </tr>
+		            </thead>
+		            <tbody>
+		                <tr ng-repeat="item in uploader.queue">
+		                    <td><strong>{{ item.file.name }}</strong></td>
+		                    <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size / 1024 / 1024 | number: 2 }} MB</td>
+		                    <td ng-show="uploader.isHTML5">
+		                        <div class="progress">
+		                            <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+		                        </div>
+		                    </td>
+		                    <td nowrap>
+		                        <button type="button" class="btn btn-xs" ng-class="{ 'btn-success': !item.isError, 'btn-danger': item.isError }" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+		                            <span ng-hide="completed" class="glyphicon glyphicon-upload"></span><span ng-show="item.isSuccess" class="glyphicon glyphicon-ok"></span><span ng-show="item.isCancel" class="glyphicon glyphicon-ban-circle"></span><span ng-show="item.isError" class="glyphicon glyphicon-remove"></span> {{ 'UPLOAD' | translate }}
+		                        </button>
+		                        <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+		                            <span class="glyphicon glyphicon-trash"></span> {{ 'REMOVE' | translate }}
+		                        </button>
+		                    </td>
+		                </tr>
+		            </tbody>
+		        </table>
+		    </div>
+		</div>
+	</div>
+	<div class="row" ng-show="imageUploader.queue.length > 0">
+	    <div class="col-sm-6">
+	        <table class="table table-striped table-bordered table-hover" ng-show="imageUploader.queue.length > 0">
+	            <thead>
+	                <tr>
+	                    <th>{{ 'NAME' | translate }}</th>
+	                    <th ng-show="imageUploader.isHTML5">{{ 'SIZE' | translate }}</th>
+	                    <th ng-show="imageUploader.isHTML5">{{ 'PROGRESS' | translate }}</th>
+	                    <th>&nbsp;</th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	                <tr ng-repeat="item in imageUploader.queue">
+	                    <td><strong>{{ item.file.name }}</strong></td>
+	                    <td ng-show="imageUploader.isHTML5" nowrap>{{ item.file.size / 1024 / 1024 | number: 2 }} MB</td>
+	                    <td ng-show="imageUploader.isHTML5">
+	                        <div class="progress">
+	                            <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+	                        </div>
+	                    </td>
+	                    <td nowrap>
+	                        <button type="button" class="btn btn-xs" ng-class="{ 'btn-success': !item.isError, 'btn-danger': item.isError }" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+	                            <span ng-hide="completed" class="glyphicon glyphicon-upload"></span><span ng-show="item.isSuccess" class="glyphicon glyphicon-ok"></span><span ng-show="item.isCancel" class="glyphicon glyphicon-ban-circle"></span><span ng-show="item.isError" class="glyphicon glyphicon-remove"></span> {{ 'UPLOAD' | translate }}
+	                        </button>
+	                        <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+	                            <span class="glyphicon glyphicon-trash"></span> {{ 'REMOVE' | translate }}
+	                        </button>
+	                    </td>
+	                </tr>
+	            </tbody>
+	        </table>
+	    </div>
+	</div>
+</div>

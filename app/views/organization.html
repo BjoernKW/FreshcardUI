@@ -1,0 +1,28 @@
+<h2>{{ 'ORGANIZATION' | translate }}</h2>
+
+<div class="profile">
+	<div class="row">
+		<div class="col-sm-3">
+			<a href="{{ organization.url }}" target="_blank">{{ organization.name }}</a>
+		</div>
+	</div>
+	<hr>
+	<div class="row">
+		<div class="col-sm-4">
+			<a ng-href="#/organization/edit/{{ organization.id }}" class="btn btn-primary">{{ 'EDIT' | translate }}</a>
+			<button class="btn btn-danger" ng-click="openDeleteModal()">{{ 'DELETE' | translate }}</a>
+		</div>
+	</div>
+</div>
+
+<script type="text/ng-template" id="modalContent.html">
+	<div class="modal-header">
+	</div>
+	<div class="modal-body">
+		<p class="text-danger"><strong>{{ 'DELETE_CONFIRMATION' | translate }}</strong></p>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-danger" ng-click="delete()">{{ 'DELETE' | translate }}</button>
+		<button class="btn btn-default" ng-click="cancel()">{{ 'CANCEL' | translate }}</button>
+	</div>
+</script>

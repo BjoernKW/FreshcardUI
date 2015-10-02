@@ -1,0 +1,16 @@
+<h2 class="inline">{{ 'PROFILE' | translate }}</h2>
+<br><br>
+<div class="profile">
+	<div class="row" ng-if="referencedUser.profilePicturePath !== null">
+		<div class="col-sm-6">
+			<img width="150" alt="{{ referencedUser.name }}" ng-src="{{ referencedUser.profilePicturePath }}" /><br><br>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6">
+			{{ referencedUser.customSignature }}
+		</div>
+	</div>
+	<hr>
+	<ng-include src="'views/vCards.html'"></ng-include>
+</div>

@@ -1,0 +1,31 @@
+<div class="row">
+	<div class="col-sm-6">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">{{ 'CHANGE_USERNAME' | translate }}</h3>
+			</div>
+			<div class="panel-body">
+				<form class="form" name="changeUsernameForm">
+					<div class="form-group" ng-class="{ 'has-error': changeUsernameForm.eMailAddress.$dirty && (changeUsernameForm.eMailAddress.$error.required || changeUsernameForm.eMailAddress.$error.email || changeUsernameForm.eMailAddress.$error.isTaken) }">
+						<label for="eMailAddress" class="control-label">{{ 'EMAIL_ADDRESS' | translate }}</label>
+						<input id="eMailAddress" ng-model="$parent.eMailAddress" name="eMailAddress" type="email" class="form-control" unique-username required autofocus>
+						<p class="text-danger" ng-show="changeUsernameForm.eMailAddress.$dirty && changeUsernameForm.eMailAddress.$error.required">{{ 'ENTER_NEW_USERNAME' | translate }}</p>
+						<p class="text-danger" ng-show="changeUsernameForm.eMailAddress.$dirty && changeUsernameForm.eMailAddress.$error.email">{{ 'EMAIL_ADDRESS_INVALID' | translate }}</p>
+						<p class="text-danger" ng-show="changeUsernameForm.eMailAddress.$dirty && changeUsernameForm.eMailAddress.$error.isTaken">{{ 'USERNAME_TAKEN' | translate }}</p>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<div class="col-sm-4">
+								<input type="submit" ng-disabled="changeUsernameForm.$invalid" value="{{ 'CHANGE_USERNAME' | translate }}" class="btn" ng-class="{ 'btn-primary': !(usernameChanged || usernameTaken), 'btn-success': usernameChanged, 'btn-danger': usernameTakenError }" ng-click="changeUsername()">
+							</div>
+							<div class="col-sm-8">
+								<p class="text-success" ng-show="usernameChanged">{{ 'USERNAME_CHANGED' | translate }}</p>
+								<p class="text-danger" ng-show="usernameTakenError">{{ 'USERNAME_TAKEN' | translate }}</p>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

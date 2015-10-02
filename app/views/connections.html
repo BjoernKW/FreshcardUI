@@ -1,0 +1,115 @@
+<h2>{{ 'YOUR_CONNECTIONS' | translate }}</h2>
+
+<div class="row">
+	<div class="col-sm-8">
+		<div class="form">
+			<form>
+				<input autocomplete="off" autocorrect="off" class="form-control" ng-keyup="search(this, searchIndex)" ng-model="query" spellcheck="false" type="text" placeholder="{{ 'SEARCH' | translate }} ...">
+			</form>
+		</div>
+	</div>
+</div>
+<hr>
+<div class="row">
+	<div class="col-sm-8">
+		<div class="list-group-item" ng-repeat="contact in hits">
+			<div class="row">
+				<div class="col-sm-10">
+					<a ng-href="#/contact/{{ contact.id }}">{{ contact.vCardData[11] }}</a>
+				</div>
+				<div class="col-sm-2">
+					<button class="btn btn-danger btn-xs pull-right" ng-click="openDeleteModal(contact.id)">{{ 'REMOVE' | translate }}</button>
+				</div>
+			</div>
+		</div>
+		<br><p class="text-success show-hide" ng-show="connectionRemoved">{{ 'CONNECTION_REMOVED' | translate }}</p>
+	</div>
+</div>
+<div class="row" ng-show="total > 10">
+	<div class="col-sm-6">
+		<pagination class="pagination-sm" boundary-links="true" total-items="total" ng-model="currentPage" max-size="maxSize" items-per-page="itemsPerPage" ng-change="selectPage(currentPage)" previous-text="{{ 'PREVIOUS' | translate }}" next-text="{{ 'NEXT' | translate }}" first-text="{{ 'FIRST' | translate }}" last-text="{{ 'LAST' | translate }}"></pagination>
+	</div>
+</div>
+<hr>
+<div class="row">
+	<div class="col-md-6">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">{{ 'ADD_FRESHCARD_USER' | translate }}</h3>
+			</div>
+			<div class="panel-body">
+				<form class="form" name="addForm">
+					<div class="form-group" ng-class="{ 'has-error': addForm.eMailAddress.$dirty && (addForm.eMailAddress.$error.required || addForm.eMailAddress.$error.email) }">
+						<label for="eMailAddress" class="control-label">{{ 'EMAIL_ADDRESS' | translate }}</label>
+						<input id="eMailAddress" ng-model="eMailAddress" name="eMailAddress" type="email" class="form-control" required>
+						<p class="text-danger" ng-show="addForm.eMailAddress.$dirty && addForm.eMailAddress.$error.required">{{ 'ENTER_EMAIL_ADDRESS' | translate }}</p>
+						<p class="text-danger" ng-show="addForm.eMailAddress.$dirty && addForm.eMailAddress.$error.email">{{ 'EMAIL_ADDRESS_INVALID' | translate }}</p>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<div class="col-sm-4">
+								<input type="submit" ng-disabled="addForm.$invalid" value="{{ 'SUBMIT' | translate }}" class="btn" ng-class="{ 'btn-primary': !addConnectionError, 'btn-danger': addConnectionError }" ng-click="addConnection()">
+							</div>
+							<div class="col-sm-8">
+								<p class="text-danger" ng-show="addConnectionError">{{ 'ADDING_CONNECTION_FAILED' | translate }}</p>
+								<p class="text-success show-hide" ng-show="addConnectionSuccess">{{ 'ADDING_CONNECTION_SUCCESSFUL' | translate }}</p>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-sm-12"><h3>{{ 'NEW_CONTACT' | translate }}</h3></div>
+    <div class="col-sm-6">
+        <div ng-show="uploader.isHTML5">
+            <div nv-file-drop="" uploader="uploader">
+                <div nv-file-over="" uploader="uploader" over-class="drop-zone-over" class="well drop-zone">
+                    {{ 'DROP_CONTACT_VCARD_HERE' | translate }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group" ng-hide="uploader.isHTML5">
+            <input nv-file-select="" uploader="uploader" type="file" class="form-control">
+        </div>
+    </div>
+</div>
+<div class="row" ng-show="uploader.queue.length > 0">
+    <div class="col-sm-6">
+        <table class="table table-striped table-bordered table-hover" ng-show="uploader.queue.length > 0">
+            <thead>
+                <tr>
+                    <th>{{ 'NAME' | translate }}</th>
+                    <th ng-show="uploader.isHTML5">{{ 'SIZE' | translate }}</th>
+                    <th ng-show="uploader.isHTML5">{{ 'PROGRESS' | translate }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in uploader.queue">
+                    <td><strong>{{ item.file.name }}</strong></td>
+                    <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size / 1024 / 1024 | number: 2 }} MB</td>
+                    <td ng-show="uploader.isHTML5">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/ng-template" id="modalContent.html">
+	<div class="modal-header">
+	</div>
+	<div class="modal-body">
+		<p class="text-danger"><strong>{{ 'REMOVAL_CONFIRMATION' | translate }}</strong></p>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-danger" ng-click="delete()">{{ 'REMOVE' | translate }}</button>
+		<button class="btn btn-default" ng-click="cancel()">{{ 'CANCEL' | translate }}</button>
+	</div>
+</script>

@@ -1,0 +1,62 @@
+<h2>{{ 'CONTACT' | translate }}</h2>
+<br><br>
+<div class="profile">
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="row" ng-repeat="entry in contact.vCardData">
+				<div ng-if="shouldContactInfoBeDisplayed(entry) && ((entry.isArray === true && entry.value.length > 0) || (entry.isArray === false && (entry.value !== null && entry.value !== undefined && entry.value !== '')))">
+					<div class="col-sm-5">
+						<strong>{{ entry.key | translate }}</strong>
+					</div>
+					<div class="col-sm-7">
+						<span ng-if="entry.isArray === true">
+							<span ng-if="entry.key === 'adr'">
+								<div ng-repeat="element in entry.value">
+									<a href="" ng-click="changeMapCenter(element)">{{ element }}</a><hr>
+								</div>
+							</span>
+							<span ng-if="entry.key !== 'adr'">
+								<span ng-repeat="element in entry.value">
+									<div ng-bind-html="element | linky | linkyTel"></div><hr>
+								</span>
+							</span>
+						</span>
+						<span ng-if="entry.isArray === false">
+							<div ng-bind-html="entry.value | linky | linkyTel"></div><hr>
+						</span>
+					</div>
+				</div>
+				<div ng-if="shouldContactInfoBeDisplayed(entry) && entry.key === 'socialProfile' && lengthOfHash(entry.value) > 0">
+					<div class="col-sm-5">
+						<strong>{{ entry.key | translate }}</strong>
+					</div>
+					<div class="col-sm-7">
+						<span ng-repeat="(key, value) in entry.value">
+							<a href="{{ value }}" target="_blank" class="btn btn-sm btn-social btn-{{ key.slice(2, key.length) }}"><i class="fa fa-{{ key.slice(2, key.length) }}"></i> | {{ key | translate }}</a><br><br>
+						</span>
+						<hr>
+					</div>
+				</div>
+			</div>
+			<hr>
+			<div class="row" ng-if="!(contact.notes === null || contact.notes === undefined || contact.notes === '')">
+				<div class="col-sm-5">
+					<strong>{{ 'NOTES' | translate }}</strong>
+				</div>
+				<div class="col-sm-7">
+					{{ contact.notes }}
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-6" ng-if="mapCenter">
+			<div ng-if="contact.vCardData[9].value !== undefined && contact.vCardData[9].value !== null">
+				<img width="150" alt="{{ contact.vCardData[0].value }}" ng-src="{{ contact.vCardData[9].value }}" /><br><br>
+			</div>
+			<a href="{{ configuration.apiRootURL }}api/v1/contacts/getVCardsByHashCode/{{ contact.hashCode }}">{{ 'VCARD' | translate }}</a>
+			<div ng-if="shouldContactInfoBeDisplayed(contact.vCardData[5].value[0]) && contact.vCardData[5].value[0]">
+				<hr>
+				<map style="display: block; height: 300px;" center="{{ mapCenter }}" />
+			</div>
+		</div>
+	</div>
+</div>

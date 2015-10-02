@@ -1,0 +1,43 @@
+<div class="row">
+	<div class="col-md-6">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">{{ 'SIGN_UP' | translate }}</h3>
+			</div>
+			<div class="panel-body">
+				<form class="form" name="signUpForm">
+					<div class="form-group" ng-class="{ 'has-error': signUpForm.eMailAddress.$dirty && (signUpForm.eMailAddress.$error.required || signUpForm.eMailAddress.$error.email || signUpForm.eMailAddress.$error.isTaken) }">
+						<label for="eMailAddress" class="control-label">{{ 'EMAIL_ADDRESS' | translate }}</label>
+						<input id="eMailAddress" ng-model="eMailAddress" name="eMailAddress" type="email" class="form-control" unique-username required autofocus>
+						<p class="text-danger" ng-show="signUpForm.eMailAddress.$dirty && signUpForm.eMailAddress.$error.required">{{ 'ENTER_NEW_USERNAME' | translate }}</p>
+						<p class="text-danger" ng-show="signUpForm.eMailAddress.$dirty && signUpForm.eMailAddress.$error.email">{{ 'EMAIL_ADDRESS_INVALID' | translate }}</p>
+						<p class="text-danger" ng-show="signUpForm.eMailAddress.$dirty && signUpForm.eMailAddress.$error.isTaken">{{ 'USERNAME_TAKEN' | translate }}</p>
+					</div>
+					<div class="form-group" ng-class="{ 'has-error': signUpForm.password.$dirty && signUpForm.password.$error.required }">
+						<label for="password" class="control-label">{{ 'PASSWORD' | translate }}</label>
+						<input id="password" ng-model="password"  name="password" type="password" class="form-control" required match="passwordVerification">
+						<p class="text-danger" ng-show="signUpForm.password.$dirty && signUpForm.password.$error.required">{{ 'ENTER_PASSWORD' | translate }}</p>
+					</div>
+					<div class="form-group" ng-class="{ 'has-error': signUpForm.passwordVerification.$dirty && (signUpForm.passwordVerification.$error.required || signUpForm.passwordVerification.$error.match) }">
+						<label for="passwordVerification" class="control-label">{{ 'PASSWORD_VERIFICATION' | translate }}</label>
+						<input id="password" ng-model="passwordVerification" name="passwordVerification" type="password" class="form-control" required match="password">
+						<p class="text-danger" ng-show="signUpForm.passwordVerification.$dirty && signUpForm.passwordVerification.$error.required">{{ 'ENTER_PASSWORD' | translate }}</p>
+						<p class="text-danger" ng-show="signUpForm.passwordVerification.$dirty && signUpForm.passwordVerification.$error.match">{{ 'PASSWORD_MISMATCH' | translate }}</p>
+					</div>
+					<div class="form-group">
+						<div class="row">
+							<div class="col-sm-3">
+								<input type="submit" ng-disabled="signUpForm.$invalid" value="{{ 'SIGN_UP' | translate }}" class="btn" ng-class="{ 'btn-primary': !usernameTakenError, 'btn-danger': usernameTakenError }" ng-click="signUp()" ng-hide="newUser">
+								<input type="submit" ng-disabled="signUpForm.$invalid" value="{{ 'SIGN_UP' | translate }}" class="btn btn-primary" ng-click="signUpExistingUser()" ng-show="newUser">
+							</div>
+							<div class="col-sm-9">
+								<p class="text-danger" ng-show="usernameTakenError">{{ 'USERNAME_TAKEN' | translate }}</p>
+							</div>
+						</div>
+					</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

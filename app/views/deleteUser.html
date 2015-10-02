@@ -1,0 +1,39 @@
+<div class="row">
+	<div class="col-sm-6">
+		<form class="form" name="deleteUserForm">
+			<div class="form-group" ng-show="$root.user.roles.ROLE_SUPER_ADMIN">
+				<label for="userIdForRemoval" class="control-label">{{ 'USER_ID' | translate }}</label>
+				<input type="text" ng-model="userIdForRemoval" name="userIdForRemoval" id="userIdForRemoval" class="form-control" required>
+			</div>
+			<div class="row">
+				<div class="col-sm-4">
+					<button class="btn btn-danger" ng-click="openDeleteModal(userIdForRemoval)">{{ 'DELETE_USER' | translate }}</button>
+				</div>
+				<div class="col-sm-8">
+					<p class="text-danger" ng-show="userRemovedError">{{ 'USER_NOT_REMOVED' | translate }}</p>
+					<p class="text-success" ng-show="userRemovedSuccess">{{ 'USER_REMOVED' | translate }}</p>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script type="text/ng-template" id="modalContent.html">
+	<div class="modal-header">
+	</div>
+	<div class="modal-body">
+		<p class="text-danger"><strong>{{ 'REMOVAL_CONFIRMATION' | translate }}</strong></p>
+		<form class="form" name="deleteUserForm">
+			<div class="form-group" ng-class="{ 'has-error': deleteUserForm.eMailAddress.$dirty && (deleteUserForm.eMailAddress.$error.required || deleteUserForm.eMailAddress.$error.email) }">
+				<label for="eMailAddress" class="control-label">{{ 'CONFIRM_WITH_USERNAME' | translate }}</label>
+				<input id="eMailAddress" ng-model="eMailAddress" name="eMailAddress" type="email" class="form-control" required autofocus>
+				<p class="text-danger" ng-show="deleteUserForm.eMailAddress.$dirty && deleteUserForm.eMailAddress.$error.required">{{ 'ENTER_USERNAME' | translate }}</p>
+				<p class="text-danger" ng-show="deleteUserForm.eMailAddress.$dirty && deleteUserForm.eMailAddress.$error.email">{{ 'EMAIL_ADDRESS_INVALID' | translate }}</p>
+			</div>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-danger" ng-disabled="eMailAddress !== $root.user.name" ng-click="delete()">{{ 'REMOVE' | translate }}</button>
+		<button class="btn btn-default" ng-click="cancel()">{{ 'CANCEL' | translate }}</button>
+	</div>
+</script>

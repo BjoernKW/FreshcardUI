@@ -1,0 +1,27 @@
+<h2>{{ 'ORGANIZATION' | translate }}</h2>
+
+<div class="row">
+	<div class="col-sm-6">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">{{ 'EDIT_ORGANIZATION' | translate }}</h3>
+			</div>
+			<div class="panel-body">
+				<form class="form" name="editOrganizationForm">
+					<div class="form-group" ng-class="{ 'has-error': editOrganizationForm.name.$dirty && (editOrganizationForm.name.$error.required) }">
+						<label for="name" class="control-label">{{ 'NAME' | translate }}</label>
+						<input id="name" ng-model="organization.name" name="name" type="text" class="form-control" autofocus required>
+						<p class="text-danger" ng-show="editOrganizationForm.name.$dirty && editOrganizationForm.name.$error.required">{{ 'ENTER_NAME' | translate }}</p>
+					</div>
+					<div class="form-group" ng-class="{ 'has-error': editOrganizationForm.url.$dirty && (editOrganizationForm.url.$error.required || editOrganizationForm.url.$error.url) }">
+						<label for="url" class="control-label">{{ 'URL' | translate }}</label>
+						<input id="url" ng-model="organization.url" name="url" type="url" class="form-control" required>
+						<p class="text-danger" ng-show="editOrganizationForm.url.$dirty && editOrganizationForm.url.$error.required">{{ 'ENTER_URL' | translate }}</p>
+						<p class="text-danger" ng-show="editOrganizationForm.url.$dirty && editOrganizationForm.url.$error.url">{{ 'URL_IS_INVALID' | translate }}</p>
+					</div>
+					<input type="submit" class="btn btn-primary" ng-disabled="editOrganizationForm.$invalid" ng-click="update()" value="{{ 'SUBMIT' | translate }}">
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

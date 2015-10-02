@@ -1,0 +1,25 @@
+<h2>{{ 'ACCOUNT' | translate }}</h2>
+
+<div class="row" ng-show="accountConfirmed">
+	<div class="col-sm-6">
+		<div class="alert alert-success">{{ 'ACCOUNT_CONFIRMED' | translate }}</div>
+	</div>
+</div>
+
+<div class="row" ng-show="passwordChanged">
+	<div class="col-sm-6">
+		<div class="alert alert-success">{{ 'PASSWORD_CHANGED' | translate }}</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-3" ng-if="user && authToken">
+		<a href="mailto:{{ user.name }}">{{ user.name }}</a>
+	</div>
+</div>
+<hr>
+<ng-include src="'views/changePassword.html'"></ng-include>
+<hr>
+<ng-include src="'views/changeUsername.html'"></ng-include>
+<hr>
+<ng-include src="'views/deleteUser.html'"></ng-include>

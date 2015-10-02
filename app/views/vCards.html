@@ -1,0 +1,66 @@
+<div ng-repeat="vcard in profileVCards" ng-init="vCardIndex = $index">
+	<div class="row">
+		<div class="col-sm-7">
+			<div class="row" ng-repeat="entry in vcard" ng-init="entryIndex = $index">
+				<div ng-if="shouldContactInfoBeDisplayed(entry) && ((entry.isArray === true && entry.value.length > 0) || (entry.isArray === false && (entry.value !== null && entry.value !== undefined && entry.value !== '')))">
+					<div class="col-sm-5">
+						<strong>{{ entry.key | translate }}</strong>
+					</div>
+					<div class="col-sm-7">
+						<span ng-if="entry.isArray === true">
+							<span ng-if="entry.key === 'adr'">
+								<div ng-repeat="element in entry.value">
+									<a href="" ng-click="changeMapCenter(element)">{{ element }}</a><hr>
+								</div>
+							</span>
+							<span ng-if="entry.key !== 'adr'">
+								<span ng-repeat="element in entry.value">
+									<span ng-if="user && authToken">
+										<span ng-bind-html="element | linky | linkyTel" editable-text="element" e-form="elementForm" onaftersave="propagateChange(entry.key, element, vCardIndex, entryIndex, $index)"></span><br>
+										<a href="" class="edit-link" ng-click="elementForm.$show()" ng-hide="elementForm.$visible" ng-if="!isPublic"><small>{{ 'EDIT' | translate }}</small></a>
+									</span>
+									<span ng-if="!(user && authToken)">
+										<span ng-bind-html="element | linky | linkyTel"></span>
+									</span>
+									<hr>
+								</span>
+							</span>
+						</span>
+						<span ng-if="entry.isArray === false">
+							<span ng-if="entry.key.indexOf('x-') !== 0">
+								<span ng-if="user && authToken">
+									<span ng-bind-html="entry.value | linky | linkyTel" editable-text="entry.value" e-form="entryForm" onaftersave="propagateChange(entry.key, entry.value, vCardIndex, entryIndex)"></span><br>
+									<a href="" class="edit-link" ng-click="entryForm.$show()" ng-hide="entryForm.$visible" ng-if="!isPublic"><small>{{ 'EDIT' | translate }}</small></a>
+								</span>
+								<span ng-if="!(user && authToken)">
+									<span ng-bind-html="entry.value | linky | linkyTel"></span>
+								</span>
+								<hr>
+							</span>
+							<span ng-if="entry.key.indexOf('x-') === 0 && entry.value.indexOf('http') === 0">
+								<a href="{{ entry.value }}" target="_blank" class="btn btn-lg btn-social btn-{{ entry.key.slice(2, entry.key.length) }}"><i class="fa fa-{{ entry.key.slice(2, entry.key.length) }}"></i></a>
+								<hr>
+							</span>
+						</span>
+					</div>
+				</div>
+				<div ng-if="shouldContactInfoBeDisplayed(entry) && entry.key === 'socialProfile' && lengthOfHash(entry.value) > 0">
+					<div class="col-sm-5">
+						<strong>{{ entry.key | translate }}</strong>
+					</div>
+					<div class="col-sm-7">
+						<span ng-repeat="(key, value) in entry.value">
+							<a href="{{ value }}" target="_blank" class="btn btn-sm btn-social btn-{{ key.slice(2, key.length) }}"><i class="fa fa-{{ key.slice(2, key.length) }}"></i> | {{ key | translate }}</a><br><br>
+						</span>
+						<hr>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-5">
+			<div ng-if="shouldContactInfoBeDisplayed(profileVCards[0][5]) && profileVCards[0][5].value[0]">
+				<map style="display: block; height: 300px;" center="{{ mapCenter }}" />
+			</div>
+		</div>
+	</div>
+</div>

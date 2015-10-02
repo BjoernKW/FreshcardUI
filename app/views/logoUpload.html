@@ -1,0 +1,92 @@
+<h2>{{ 'UPLOAD_LOGO' | translate }}</h2>
+
+<form class="form">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="templateCanvasWrapper">
+                <canvas id="logoCanvas" width="500" height="324" class="business-card-canvas"></canvas>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <input type="checkbox" ng-model="fields[0]" id="nameField">
+                <label for="nameField">{{ 'NAME' | translate }}</label>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" ng-model="fields[1]" id="eMailField">
+                <label for="eMailField">{{ 'EMAIL_ADDRESS' | translate }}</label>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" ng-model="fields[2]" id="streetAddressField">
+                <label for="streetAddressField">{{ 'STREET_ADDRESS' | translate }}</label>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" ng-model="fields[3]" id="postalCodeField">
+                <label for="postalCodeField">{{ 'POSTAL_CODE' | translate }}</label>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" ng-model="fields[4]" id="cityField">
+                <label for="cityField">{{ 'CITY' | translate }}</label>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" ng-model="fields[5]" id="phoneNumberField">
+                <label for="phoneNumberField">{{ 'PHONE_NUMBER' | translate }}</label>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" ng-model="fields[6]" id="websiteField">
+                <label for="websiteField">{{ 'WEBSITE' | translate }}</label>
+            </div>
+        </div>
+    </div>
+    <div class="row" ng-show="logoImagePath">
+        <div class="col-sm-6">
+            <input type="submit" value="{{ 'SAVE_TEMPLATE' | translate }}" class="btn btn-success" ng-click="saveTemplate()">
+            <input type="submit" value="{{ 'PUBLISH_TEMPLATE' | translate }}" class="btn btn-warning" ng-click="publishTemplate()">
+            <br><br>
+            <div class="messages">
+                <p class="text-success show-hide" ng-show="templateLayoutSaved">{{ 'TEMPLATE_LAYOUT_SAVED' | translate }}</p>
+                <p class="text-danger show-hide" ng-show="templateLayoutError">{{ 'TEMPLATE_LAYOUT_ERROR' | translate }}</p>
+                <p class="text-success show-hide" ng-show="templateLayoutPublished">{{ 'TEMPLATE_LAYOUT_PUBLISHED' | translate }}</p>
+                <p class="text-danger show-hide" ng-show="templateLayoutPublishError">{{ 'TEMPLATE_LAYOUT_PUBLISH_ERROR' | translate }}</p>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="row">
+    <div class="col-sm-6">
+        <div ng-show="imageUploader.isHTML5">
+            <div nv-file-drop="" uploader="imageUploader">
+                <div nv-file-over="" uploader="imageUploader" over-class="drop-zone-over" class="well drop-zone">
+                    {{ 'DROP_IMAGE_HERE' | translate }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group" ng-hide="imageUploader.isHTML5">
+            <input nv-file-select="" uploader="imageUploader" type="file" class="form-control">
+        </div>
+    </div>
+</div>
+<div class="row" ng-show="imageUploader.queue.length > 0">
+    <div class="col-sm-6">
+        <table class="table table-striped table-bordered table-hover" ng-show="imageUploader.queue.length > 0">
+            <thead>
+                <tr>
+                    <th>{{ 'NAME' | translate }}</th>
+                    <th ng-show="imageUploader.isHTML5">{{ 'SIZE' | translate }}</th>
+                    <th ng-show="imageUploader.isHTML5">{{ 'PROGRESS' | translate }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in imageUploader.queue">
+                    <td><strong>{{ item.file.name }}</strong></td>
+                    <td ng-show="imageUploader.isHTML5" nowrap>{{ item.file.size / 1024 / 1024 | number: 2 }} MB</td>
+                    <td ng-show="imageUploader.isHTML5">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
